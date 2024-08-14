@@ -49,6 +49,5 @@ from client:
 {
   op: 2,
   actions: Action[] // see above for example of actions.
-  ]
 }
 ```
