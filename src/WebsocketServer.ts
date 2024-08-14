@@ -29,13 +29,10 @@ export default class WebsocketServer extends EventEmitter {
                         this.emit('auth', parsed, ws)
                     break;
                     case 1:
-                        this.emit('addQso', parsed)
+                        this.emit('action', parsed)
                     break;
                     case 2:
-                        this.emit('editQso', parsed)
-                    break;
-                    case 3:
-                        this.emit('delQso', parsed)
+                        this.emit('actionReplay', parsed)
                     break;
                     // HB packet
                     case 1000:
