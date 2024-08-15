@@ -1,7 +1,13 @@
 import { PrismaClient } from "@prisma/client"
 import { chunk } from "./functions"
 import WebsocketServer from "./WebsocketServer"
-import { Action, ActionPacket, ActionReplayPacket, AuthPacket } from "./types"
+import { ActionPacket, ActionReplayPacket, AuthPacket } from "./types"
+
+// This is incredibly hacky, but it tells JSON.stringify how to serialize the BigInt used in the timestamp.
+//@ts-ignore
+BigInt.prototype['toJSON'] = function () { 
+    return this.toString()
+}
 
 require('ckey')
 const prisma = new PrismaClient()
@@ -47,7 +53,7 @@ server.on('action', async (data: ActionPacket, ws: WebSocket) => {
         await server.addQSO(data.action)
     } else if (data.action.type == 'edit') {
         await server.editQSO(data.action)
-    } else if (data.action.type == 'edit') {
+    } else if (data.action.type == 'delete') {
         await server.deleteQSO(data.action)
     }
 })
@@ -73,7 +79,7 @@ server.on('action_replay', async (data: ActionReplayPacket, ws: WebSocket) => {
             await server.addQSO(action)
         } else if (action.type == 'edit') {
             await server.editQSO(action)
-        } else if (action.type == 'edit') {
+        } else if (action.type == 'delete') {
             await server.deleteQSO(action)
         }
 

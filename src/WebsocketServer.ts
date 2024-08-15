@@ -15,9 +15,11 @@ export default class WebsocketServer extends EventEmitter {
     startServer() {
         this.server = new WebSocketServer({ port: this.port })
         this.server.on('connection', (ws: WebSocket) => {
+            console.log('connection')
             let timeout = setTimeout(() => {ws.close(3000)}, 10000)
             let authed = false
             ws.on('message', (data) => {
+                console.log(data.toString())
                 if(!JSON.parse(data.toString())) {
                     ws.close()
                 }
@@ -81,6 +83,7 @@ export default class WebsocketServer extends EventEmitter {
                 id: data.qso.id
             }
         })
+        console.log('deleting qso ', data.qso.id)
         this.broadcast({
             op: 3,
             id: data.qso.id,

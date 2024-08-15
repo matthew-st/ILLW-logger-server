@@ -1,4 +1,5 @@
 .env
 dist/
 node_modules/
+migrations/
 api_packets.txt
