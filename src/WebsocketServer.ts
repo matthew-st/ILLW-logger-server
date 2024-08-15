@@ -5,6 +5,7 @@ export default class WebsocketServer extends EventEmitter {
     port: number
     server: WebSocketServer
     prisma: PrismaClient
+    connections: number = 0
     constructor(port: number, prisma: PrismaClient) {
         super()
         this.port = port
@@ -15,11 +16,15 @@ export default class WebsocketServer extends EventEmitter {
     startServer() {
         this.server = new WebSocketServer({ port: this.port })
         this.server.on('connection', (ws: WebSocket) => {
-            console.log('connection')
+            this.connections++
+            console.log(`${this.connections} connected to server.`)
             let timeout = setTimeout(() => {ws.close(3000)}, 10000)
             let authed = false
+            ws.on('close', () => {
+                this.connections--
+                console.log(`Client disconnect\n${this.connections} connected to server.`)
+            })
             ws.on('message', (data) => {
-                console.log(data.toString())
                 if(!JSON.parse(data.toString())) {
                     ws.close()
                 }
