@@ -22,6 +22,7 @@ model QSO {
   rstRcvd      String
   mode         String
   notes        String
-  time         BigInt
+  time         String
   operatorCall String
+  emailed      Boolean @default(false)
 }

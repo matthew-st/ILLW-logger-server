@@ -13,7 +13,7 @@ export interface QSO {
     rstRcvd: string
     mode: string
     notes: string
-    time: number
+    time: string
     id: string
     operatorCall: string
 }

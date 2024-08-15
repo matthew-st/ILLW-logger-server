@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client"
 import { chunk } from "./functions"
 import WebsocketServer from "./WebsocketServer"
 import { ActionPacket, ActionReplayPacket, AuthPacket } from "./types"
+import handleQSLMail from "./QSLCards"
 
 // This is incredibly hacky, but it tells JSON.stringify how to serialize the BigInt used in the timestamp.
 //@ts-ignore
@@ -88,4 +89,12 @@ server.on('actionReplay', async (data: ActionReplayPacket, ws: WebSocket) => {
 
 server.on('listening', () => {
     console.log(`Websocket listening on ${server.port}`)
+    setInterval(async () => {
+        let QSOsToMail = await prisma.qSO.findMany({where: {emailed: false}})
+        handleQSLMail(QSOsToMail)
+        await prisma.qSO.updateMany({
+            where: {emailed: false},
+            data: {emailed: true}
+        })
+    }, 30000)
 })
