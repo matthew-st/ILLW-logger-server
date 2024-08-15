@@ -16,20 +16,18 @@ export default class WebsocketServer extends EventEmitter {
         this.server = new WebSocketServer({ port: this.port })
         this.server.on('connection', (ws: WebSocket) => {
             let timeout = setTimeout(() => {ws.close(3000)}, 10000)
-            console.log('Connection')
+            let authed = false
             ws.on('message', (data) => {
                 if(!JSON.parse(data.toString())) {
                     ws.close()
                 }
-                //@ts-ignore
                 const parsed = JSON.parse(data.toString())
-                console.log(parsed)
+                if (!authed && parsed.op != 0) {ws.close(3000)}
                 switch (parsed.op) {
                     case 0:
-                        //@ts-ignore
                         clearTimeout(timeout)
-                        //@ts-ignore
                         timeout = setTimeout(() => {ws.close(1000, 'hb')}, 15000)
+                        authed = true
                         this.emit('auth', parsed, ws)
                     break;
                     case 1:
@@ -40,9 +38,7 @@ export default class WebsocketServer extends EventEmitter {
                     break;
                     // HB packet
                     case 1000:
-                        //@ts-ignore
                         clearTimeout(timeout)
-                        //@ts-ignore
                         timeout = setTimeout(() => {ws.close(1000, 'HB')}, 15000)
                         ws.send(JSON.stringify({
                             op: 1000,
