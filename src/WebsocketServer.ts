@@ -1,10 +1,14 @@
+import { PrismaClient } from "@prisma/client"
 import {EventEmitter, WebSocket, WebSocketServer} from "ws"
+import { Action } from "./types"
 export default class WebsocketServer extends EventEmitter {
     port: number
     server: WebSocketServer
-    constructor(port: number) {
+    prisma: PrismaClient
+    constructor(port: number, prisma: PrismaClient) {
         super()
         this.port = port
+        this.prisma = prisma
         this.startServer()
     }
 
@@ -29,10 +33,10 @@ export default class WebsocketServer extends EventEmitter {
                         this.emit('auth', parsed, ws)
                     break;
                     case 1:
-                        this.emit('action', parsed)
+                        this.emit('action', parsed, ws)
                     break;
                     case 2:
-                        this.emit('actionReplay', parsed)
+                        this.emit('actionReplay', parsed, ws)
                     break;
                     // HB packet
                     case 1000:
@@ -48,6 +52,43 @@ export default class WebsocketServer extends EventEmitter {
         })
         this.server.on('listening', () => {
             this.emit('listening')
+        })
+    }
+    async addQSO(data: Action) {
+        await this.prisma.qSO.create({
+            data: data.qso
+        })
+        this.broadcast({
+            op: 1,
+            qso: data.qso,
+            opId: data.opId
+        })
+    }
+
+    async editQSO(data: Action) {
+        await this.prisma.qSO.update({
+            where: {
+                id: data.qso.id
+            },
+            data: data.qso
+        })
+        this.broadcast({
+            op: 2,
+            qso: data.qso,
+            opId: data.opId
+        })
+    }
+
+    async deleteQSO(data: Action) {
+        await this.prisma.qSO.delete({
+            where: {
+                id: data.qso.id
+            }
+        })
+        this.broadcast({
+            op: 3,
+            id: data.qso.id,
+            opId: data.opId
         })
     }
 
