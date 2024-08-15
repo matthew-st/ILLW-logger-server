@@ -15,13 +15,6 @@ const prisma = new PrismaClient()
 const server = new WebsocketServer(3903, prisma)
 
 server.on('auth', async (pkt: AuthPacket, ws: WebSocket) => {
-    if (pkt.token != process.env.TOKEN) {
-        ws.send(JSON.stringify({
-            op: 0,
-            unauthenticated: true
-        }))
-        return ws.close(3000)
-    }
     let QSOs = await prisma.qSO.findMany()
     // Send chunks of QSOs from database
     let chunks = chunk(QSOs, 10)

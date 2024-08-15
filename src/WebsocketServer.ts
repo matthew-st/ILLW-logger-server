@@ -32,6 +32,13 @@ export default class WebsocketServer extends EventEmitter {
                 if (!authed && parsed.op != 0) {ws.close(3000)}
                 switch (parsed.op) {
                     case 0:
+                        if (parsed.token != process.env.TOKEN) {
+                            ws.send(JSON.stringify({
+                                op: 0,
+                                unauthenticated: true
+                            }))
+                            return ws.close(3000)
+                        }                    
                         clearTimeout(timeout)
                         authed = true
                         this.emit('auth', parsed, ws)
