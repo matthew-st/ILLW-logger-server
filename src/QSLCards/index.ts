@@ -8,11 +8,11 @@ let transport = nodemailer.createTransport({
     port: 587,
     secure: false,
     auth: {
-        user: process.env.email_user,
-        pass: process.env.email_pass
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 })
-let qrz = new QRZHandler(process.env.qrz_user, process.env.qrz_pass)
+let qrz = new QRZHandler(process.env.QRZ_USER, process.env.QRZ_PASS)
 export default async function handleQSLMail(qsos: QSO[]) {
     qsos.forEach(async (QSO) => {
         let user = await qrz.getUser(QSO.call)
