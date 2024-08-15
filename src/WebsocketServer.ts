@@ -41,7 +41,7 @@ export default class WebsocketServer extends EventEmitter {
                     // HB packet
                     case 1000:
                         clearTimeout(timeout)
-                        timeout = setTimeout(() => {ws.close(1000, 'HB')}, 15000)
+                        timeout = setTimeout(() => {ws.close(1000, 'HB')}, 30000)
                         ws.send(JSON.stringify({
                             op: 1000,
                         }))
