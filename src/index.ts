@@ -1,3 +1,4 @@
+require('ckey')
 import { PrismaClient } from "@prisma/client"
 import { chunk } from "./functions"
 import WebsocketServer from "./WebsocketServer"
@@ -10,7 +11,6 @@ BigInt.prototype['toJSON'] = function () {
     return this.toString()
 }
 
-require('ckey')
 const prisma = new PrismaClient()
 const server = new WebsocketServer(3903, prisma)
 
