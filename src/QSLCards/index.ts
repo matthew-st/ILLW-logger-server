@@ -2,7 +2,6 @@ import nodemailer from 'nodemailer'
 import QRZHandler from './QRZLib'
 import generate from './generate'
 import { QSO } from '../types'
-
 let transport = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: 587,
@@ -19,7 +18,7 @@ export default async function handleQSLMail(qsos: QSO[]) {
         let generated = await generate(QSO)
         transport.sendMail({
             from: 'GB0CSL E-mail QSL cards <gb0csl@ocld.cc>',
-            to: `${user.name} <me@ocld.cc>`,
+            to: `${user.name} <${user.email}>`,
             subject: `73s ${QSO.call} de GB0CSL`,
             text: `Hello ${user.name}.
             You have recently made a contact with the GB0CSL Covesea lighthouse station.

@@ -7,7 +7,7 @@ export default class QRZHandler {
     private creds: [string, string]
     constructor(login: string, pass: string) {
         this.creds = [login, pass]
-        this._getNewKey
+        this._getNewKey()
     }
 
     async _getNewKey() {

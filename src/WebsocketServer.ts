@@ -33,7 +33,6 @@ export default class WebsocketServer extends EventEmitter {
                 switch (parsed.op) {
                     case 0:
                         clearTimeout(timeout)
-                        timeout = setTimeout(() => {ws.close(1000, 'hb')}, 15000)
                         authed = true
                         this.emit('auth', parsed, ws)
                     break;
@@ -43,13 +42,6 @@ export default class WebsocketServer extends EventEmitter {
                     case 2:
                         this.emit('actionReplay', parsed, ws)
                     break;
-                    // HB packet
-                    case 1000:
-                        clearTimeout(timeout)
-                        timeout = setTimeout(() => {ws.close(1000, 'HB')}, 30000)
-                        ws.send(JSON.stringify({
-                            op: 1000,
-                        }))
                 }
             })
         })
@@ -58,6 +50,7 @@ export default class WebsocketServer extends EventEmitter {
         })
     }
     async addQSO(data: Action) {
+        data.qso.time = data.qso.time.toString()
         await this.prisma.qSO.create({
             data: data.qso
         })
@@ -69,6 +62,7 @@ export default class WebsocketServer extends EventEmitter {
     }
 
     async editQSO(data: Action) {
+        data.qso.time = data.qso.time.toString()
         await this.prisma.qSO.update({
             where: {
                 id: data.qso.id
@@ -83,6 +77,7 @@ export default class WebsocketServer extends EventEmitter {
     }
 
     async deleteQSO(data: Action) {
+        data.qso.time = data.qso.time.toString()
         await this.prisma.qSO.delete({
             where: {
                 id: data.qso.id
