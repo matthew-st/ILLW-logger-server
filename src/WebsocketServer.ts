@@ -83,7 +83,6 @@ export default class WebsocketServer extends EventEmitter {
                 id: data.qso.id
             }
         })
-        console.log('deleting qso ', data.qso.id)
         this.broadcast({
             op: 3,
             id: data.qso.id,

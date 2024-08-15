@@ -58,7 +58,7 @@ server.on('action', async (data: ActionPacket, ws: WebSocket) => {
     }
 })
 
-server.on('action_replay', async (data: ActionReplayPacket, ws: WebSocket) => {
+server.on('actionReplay', async (data: ActionReplayPacket, ws: WebSocket) => {
     for (let action_idx in data.actions) {
         let action = data.actions[action_idx]
         if(!action.opId) {ws.close(1000)}
