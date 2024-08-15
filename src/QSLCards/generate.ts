@@ -19,7 +19,7 @@ const back = fs.readFileSync("./images/Back.png")
 export default async function generate(qso: QSO): Promise<{ back: Buffer; front: Buffer }> {
     let qso_render: any = {}
     let sendBlank = false
-    qso_render.date = new Date(qso.time).toUTCString().slice(0,-4)
+    qso_render.date = new Date(parseInt(qso.time)).toUTCString().slice(0,-4)
     qso_render.rstS = qso.rstSent
     qso_render.rstR = qso.rstRcvd
     qso_render.mode = qso.mode

@@ -4,7 +4,7 @@ import generate from './generate'
 import { QSO } from '../types'
 
 let transport = nodemailer.createTransport({
-    host: process.env.email_host,
+    host: process.env.EMAIL_HOST,
     port: 587,
     secure: false,
     auth: {
