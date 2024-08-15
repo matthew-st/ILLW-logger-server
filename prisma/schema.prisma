@@ -22,6 +22,6 @@ model QSO {
   rstRcvd      String
   mode         String
   notes        String
-  time         Int
+  time         BigInt
   operatorCall String
 }
