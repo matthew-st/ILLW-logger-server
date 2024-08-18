@@ -1,5 +1,7 @@
 # ILLW-logger-v2 server
 
+**If you use this project, please leave the part of the email which attributes this project to me in the email.**
+
 OP 0, auth packet
 from client:
 ```
